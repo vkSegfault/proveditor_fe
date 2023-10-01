@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:dio/dio.dart';
 
 void main() {
@@ -59,7 +58,6 @@ class _HomePageState extends State<HomePage> {
             onChanged: (String value) { getProvince(value); },
             onSubmitted: (String value) { getProvince(value); },  // when enter button is clicked
           ),
-          Container( color: Colors.blueGrey, alignment: AlignmentDirectional.center, child: provinceView ),
           Container( color: Colors.blue, alignment: AlignmentDirectional.center, child: provinceList ),
         ],
         ),
@@ -87,7 +85,7 @@ class _HomePageState extends State<HomePage> {
         for ( final prov in response.data['hits']['hits'] ) {
 
           String provinceName = prov['_source']['name'];
-          String country = "## NOT IMPLEMENTED";
+          String country = prov['_source']['country']['name'];
           int pop = prov['_source']['pop'];
 
           print( provinceName );

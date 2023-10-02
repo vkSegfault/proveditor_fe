@@ -24,18 +24,17 @@ class HomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<HomePage> createState() => _HomePageState(Dio());
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
 
   // for Dio package
-  final Dio dio;
-  _HomePageState(this.dio);
+  final Dio dio = Dio();
   // for Dio package
 
   String responseJson = "";
-  Map<String, dynamic>  responseJsonMap = Map();
+  Map<String, dynamic>  responseJsonMap = {};
   ProvinceView provinceView = const ProvinceView( name: "DEBUG", country: "DEBUG", pop: -1 );
   List<ProvinceView> provinceViewList = List.empty(growable: true);
   late ProvinceList provinceList = ProvinceList( provinceList: provinceViewList );
@@ -43,23 +42,24 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(centerTitle: true, backgroundColor: Colors.amber, title: const Text("Province Editor"),),
-        body: Column( crossAxisAlignment: CrossAxisAlignment.center, 
+        appBar: AppBar( title: const Text("Province Editor"), centerTitle: true, backgroundColor: const Color.fromARGB(255, 165, 149, 99), ),
+        body: Column( 
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-          SearchBar( 
-            leading: const Icon(Icons.search),
-            backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 194, 199, 231)), 
-            shadowColor: MaterialStateProperty.all(Colors.cyan),
-            overlayColor: MaterialStateProperty.all(Colors.pink),
-            elevation: MaterialStateProperty.all(10.0),
-            side: MaterialStateProperty.all(const BorderSide(color: Colors.pinkAccent)),
-            hintText: 'Search Province...',
-            hintStyle: MaterialStateProperty.all(const TextStyle(color: Colors.black54, fontWeight: FontWeight.bold)),
-            onChanged: (String value) { getProvince(value); },
-            onSubmitted: (String value) { getProvince(value); },  // when enter button is clicked
-          ),
-          Container( color: Colors.blue, alignment: AlignmentDirectional.center, child: provinceList ),
-        ],
+            SearchBar(
+              leading: const Icon(Icons.search),
+              backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 194, 199, 231)), 
+              shadowColor: MaterialStateProperty.all(Colors.cyan),
+              overlayColor: MaterialStateProperty.all(Colors.pink),
+              elevation: MaterialStateProperty.all(10.0),
+              side: MaterialStateProperty.all(const BorderSide(color: Colors.pinkAccent)),
+              hintText: 'Search Province...',
+              hintStyle: MaterialStateProperty.all(const TextStyle(color: Colors.black54, fontWeight: FontWeight.bold)),
+              onChanged: (String value) { getProvince(value); },
+              onSubmitted: (String value) { getProvince(value); },  // when enter button is clicked
+            ),
+            Container( color: Colors.blue, alignment: Alignment.center, child: provinceList ),
+          ],
         ),
       );
   }
@@ -113,11 +113,16 @@ class ProvinceView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
       children: [
-        Text(name),
-        Text("Country: $country"),
-        Text("Pop: $pop")
+        const Icon(Icons.map_outlined),
+        Column(
+          children: [
+            Text(name),
+            Text("Country: $country"),
+            Text("Pop: $pop")
+          ],
+        ),
       ],
     );
   }

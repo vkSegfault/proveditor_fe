@@ -42,8 +42,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar( title: const Text("Province Editor"), centerTitle: true, backgroundColor: const Color.fromARGB(255, 165, 149, 99), ),
-        body: Column( 
+      backgroundColor: Colors.black12,
+      appBar: AppBar( title: const Text("Province Editor"), centerTitle: true, backgroundColor: const Color.fromARGB(255, 165, 149, 99), ),
+      body: Container(
+        decoration: const BoxDecoration( image: DecorationImage(image: AssetImage("assets/map1.jpeg"), fit: BoxFit.cover) ),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SearchBar(
@@ -58,10 +61,11 @@ class _HomePageState extends State<HomePage> {
               onChanged: (String value) { getProvince(value); },
               onSubmitted: (String value) { getProvince(value); },  // when enter button is clicked
             ),
-            Container( color: Colors.blue, alignment: Alignment.center, child: provinceList ),
+            Container( color: const Color.fromARGB(200, 136, 171, 201), alignment: Alignment.center, child: provinceList ),
           ],
         ),
-      );
+      ),
+    );
   }
 
   void getProvince( String provinceName ) async {
@@ -90,7 +94,6 @@ class _HomePageState extends State<HomePage> {
 
           print( provinceName );
           setState(() {
-            // provinceView = ProvinceView( name: provinceName, country: country, pop: pop);
             provinceViewList.add(ProvinceView( name: provinceName, country: country, pop: pop));
           });
         }
@@ -114,11 +117,15 @@ class ProvinceView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
+        Container(color: Colors.amber, height: 40, width: 40,),
+        const SizedBox(width: 20),
         const Icon(Icons.map_outlined),
+        const SizedBox(width: 20),
         Column(
           children: [
-            Text(name),
+            Text(name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
             Text("Country: $country"),
             Text("Pop: $pop")
           ],

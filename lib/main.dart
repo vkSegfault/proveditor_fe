@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:proveditor_fe/login_page.dart';
 import 'dart:developer';
-import 'dart:ui';
 import 'glass_text_button.dart';
 
 void main() {
@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Province Editor",  // name of Tab (Browser) or App Window (Desktop)
+      debugShowCheckedModeBanner: false,
       theme: ThemeData( primaryColor: Colors.blueGrey ),
       home: const HomePage(title: "Province Editor")
     );
@@ -48,10 +49,10 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.black12,
       appBar: AppBar( title: const Text("Province Editor"), centerTitle: true, backgroundColor: const Color.fromARGB(255, 165, 149, 99), ),
       body: Container(
-        constraints: const BoxConstraints(maxHeight: 1080, maxWidth: 1920),
+        constraints: const BoxConstraints(maxHeight: 1080, maxWidth: 2400),
         decoration: const BoxDecoration( image: DecorationImage(image: AssetImage("assets/map1.jpeg"), fit: BoxFit.cover) ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Flexible(
@@ -59,12 +60,22 @@ class _HomePageState extends State<HomePage> {
               child: ExpansionTile(
                 backgroundColor: Colors.black54,
                 collapsedBackgroundColor: Colors.black54,
+                collapsedIconColor: Colors.white,
                 title: const Text("Menu", textScaleFactor: 2, style: TextStyle(color: Colors.cyan ) ),
                 controlAffinity: ListTileControlAffinity.trailing,
                 children: [
                   ListTile(title: GlassTextButton(text: "Import", f: import, height: 60) ),
                   ListTile(title: GlassTextButton(text: "Export", f: export, height: 60) ),
-                  ListTile(title: GlassTextButton(text: "Elasticsearch Indexing", f: elasticIndexing, height: 60, width: 200) )
+                  ListTile(title: GlassTextButton(text: "Elasticsearch Indexing", f: elasticIndexing, height: 60, width: 200) ),
+                  ListTile(title: ElevatedButton(
+                    // switch to LoginPage
+                    onPressed: () { Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) { 
+                        return const LoginPage(); 
+                      } ) 
+                    ); },
+                    child: const Text("Login"),),
+                  )
                 ],
               ),
             ),
@@ -85,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                     onChanged: (String value) { getProvince(value); },
                     onSubmitted: (String value) { getProvince(value); },  // when enter button is clicked
                   ),
-                  Container( color: const Color.fromARGB(200, 136, 171, 201), alignment: Alignment.center, child: provinceList ),
+                  Container( color: const Color.fromARGB(100, 136, 171, 201), alignment: Alignment.center, child: provinceList ),
                 ],
               ),
             ),
@@ -190,21 +201,29 @@ class ProvinceView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const SizedBox(width: 20),
-        const Icon(Icons.map_outlined),
-        const SizedBox(width: 20),
-        Column(
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: const Color.fromARGB(200, 100, 100, 250)),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-            Text("Country: $country"),
-            Text("Pop: $pop")
+            const SizedBox(width: 20),
+            const Icon(Icons.map_outlined),
+            const SizedBox(width: 20),
+            Column(
+              children: [
+                const SizedBox(height: 10),
+                Text(name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                Text("Country: $country"),
+                Text("Pop: $pop"),
+                const SizedBox(height: 10),
+              ],
+            ),
+            const SizedBox(width: 20),
           ],
         ),
-        const SizedBox(width: 20),
-      ],
+      ),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:proveditor_fe/login_page.dart';
 import 'dart:developer';
 import 'glass_text_button.dart';
+import 'province.dart';
 
 void main() {
   runApp(const MyApp());
@@ -49,8 +50,8 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.black12,
       appBar: AppBar( title: const Text("Province Editor"), centerTitle: true, backgroundColor: const Color.fromARGB(255, 165, 149, 99), ),
       body: Container(
-        constraints: const BoxConstraints(maxHeight: 1080, maxWidth: 2400),
-        decoration: const BoxDecoration( image: DecorationImage(image: AssetImage("assets/map1.jpeg"), fit: BoxFit.cover) ),
+        constraints: const BoxConstraints(maxHeight: 1500, maxWidth: 2400, minHeight: 1000),
+        decoration: const BoxDecoration( image: DecorationImage(image: AssetImage("assets/map1.jpeg"), fit: BoxFit.fill) ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,7 +62,11 @@ class _HomePageState extends State<HomePage> {
                 backgroundColor: Colors.black54,
                 collapsedBackgroundColor: Colors.black54,
                 collapsedIconColor: Colors.white,
-                title: const Text("Menu", textScaleFactor: 2, style: TextStyle(color: Colors.cyan ) ),
+                title: const Row(children: [
+                  Icon(Icons.settings),
+                  SizedBox(width: 10,),
+                  Text("Menu", textScaleFactor: 2, style: TextStyle(color: Colors.cyan ) )
+                ],),
                 controlAffinity: ListTileControlAffinity.trailing,
                 children: [
                   ListTile(title: GlassTextButton(text: "Import", f: import, height: 60) ),
@@ -81,23 +86,30 @@ class _HomePageState extends State<HomePage> {
             ),
             Flexible(
               flex: 5,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SearchBar(
-                    leading: const Icon(Icons.search),
-                    backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 194, 199, 231)), 
-                    shadowColor: MaterialStateProperty.all(Colors.cyan),
-                    overlayColor: MaterialStateProperty.all(const Color.fromARGB(255, 190, 190, 156)),
-                    elevation: MaterialStateProperty.all(10.0),
-                    side: MaterialStateProperty.all(const BorderSide(color: Colors.pinkAccent)),
-                    hintText: 'Search Province...',
-                    hintStyle: MaterialStateProperty.all(const TextStyle(color: Colors.black54, fontWeight: FontWeight.bold)),
-                    onChanged: (String value) { getProvince(value); },
-                    onSubmitted: (String value) { getProvince(value); },  // when enter button is clicked
-                  ),
-                  Container( color: const Color.fromARGB(100, 136, 171, 201), alignment: Alignment.center, child: provinceList ),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SearchBar(
+                      leading: const Icon(Icons.search),
+                      backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 194, 199, 231)), 
+                      shadowColor: MaterialStateProperty.all(Colors.cyan),
+                      overlayColor: MaterialStateProperty.all(const Color.fromARGB(255, 190, 190, 156)),
+                      elevation: MaterialStateProperty.all(10.0),
+                      side: MaterialStateProperty.all(const BorderSide(color: Colors.pinkAccent)),
+                      hintText: 'Search Province...',
+                      hintStyle: MaterialStateProperty.all(const TextStyle(color: Colors.black54, fontWeight: FontWeight.bold)),
+                      onChanged: (String value) { getProvince(value); },
+                      onSubmitted: (String value) { getProvince(value); },  // when enter button is clicked
+                    ),
+                    Container(
+                      decoration: BoxDecoration(color: const Color.fromARGB(100, 136, 171, 201), borderRadius: BorderRadius.circular(10)),
+                      margin: const EdgeInsets.symmetric( horizontal: 15, vertical: 15 ),
+                      alignment: Alignment.center,
+                      child: provinceList
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -190,53 +202,4 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-}
-
-class ProvinceView extends StatelessWidget {
-  const ProvinceView({super.key, this.name = "ERROR", this.country = "ERROR", this.pop = -1});
-
-  final String name;
-  final String country;
-  final int pop;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: const Color.fromARGB(200, 100, 100, 250)),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(width: 20),
-            const Icon(Icons.map_outlined),
-            const SizedBox(width: 20),
-            Column(
-              children: [
-                const SizedBox(height: 10),
-                Text(name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                Text("Country: $country"),
-                Text("Pop: $pop"),
-                const SizedBox(height: 10),
-              ],
-            ),
-            const SizedBox(width: 20),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ProvinceList extends StatelessWidget {
-  const ProvinceList({super.key, required this.provinceList });
-
-  final List<ProvinceView> provinceList;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: provinceList,
-      );
-  }
 }

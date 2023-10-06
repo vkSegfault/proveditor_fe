@@ -139,8 +139,17 @@ class _HomePageState extends State<HomePage> {
         for ( final prov in response.data['hits']['hits'] ) {
 
           String provinceName = prov['_source']['name'];
-          String country = prov['_source']['country']['name'];
-          int pop = prov['_source']['pop'];
+
+          String country;
+          int pop;
+          try {
+            // if DB if dropped, new one won't probbaly has [country] or [pop]
+            country = prov['_source']['country']['name'];
+            pop = prov['_source']['pop'];
+          } catch(e) {
+            country = "## NOT PROVIDED ##";
+            pop = -1;
+          }
 
           log( provinceName );
           setState(() {

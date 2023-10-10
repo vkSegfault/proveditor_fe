@@ -99,8 +99,8 @@ class _HomePageState extends State<HomePage> {
                       side: MaterialStateProperty.all(const BorderSide(color: Colors.pinkAccent)),
                       hintText: 'Search Province...',
                       hintStyle: MaterialStateProperty.all(const TextStyle(color: Colors.black54, fontWeight: FontWeight.bold)),
-                      onChanged: (String value) { getProvince(value); },
-                      onSubmitted: (String value) { getProvince(value); },  // when enter button is clicked
+                      onChanged: (String value) { getResult(value); },
+                      onSubmitted: (String value) { getResult(value); },  // when enter button is clicked
                     ),
                     Container(
                       decoration: BoxDecoration(color: const Color.fromARGB(100, 136, 171, 201), borderRadius: BorderRadius.circular(10)),
@@ -118,10 +118,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void getProvince( String provinceName ) async {
+  void getResult( String query ) async {
 
     const String url = 'http://localhost:9200/province/_search';
-    final String body = '{ "query": { "prefix": { "name": { "value": "$provinceName" } } } }';
+    final String body = '{ "query": { "bool": { "should": [ { "prefix": {"name": "$query" } }, { "prefix": { "country.name": "$query" } } ] } } }';
     const Map<String, dynamic> headers = {'Content-Type': 'application/json'};
 
     try {
@@ -133,7 +133,7 @@ class _HomePageState extends State<HomePage> {
       );
 
       if ( response.statusCode == 200 ) {
-        log( "### THERE ARE: ${response.data['hits']['total']['value']} PROVINCES mathichg query: $provinceName");
+        log( "### THERE ARE: ${response.data['hits']['total']['value']} PROVINCES mathichg query: $query");
         
         provinceViewList.clear();
         for ( final prov in response.data['hits']['hits'] ) {

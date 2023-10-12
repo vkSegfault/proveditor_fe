@@ -70,8 +70,10 @@ class _HomePageState extends State<HomePage> {
                 controlAffinity: ListTileControlAffinity.trailing,
                 children: [
                   ListTile(title: GlassTextButton(text: "Import", f: import, height: 60) ),
-                  ListTile(title: GlassTextButton(text: "Export", f: export, height: 60) ),
-                  ListTile(title: GlassTextButton(text: "Elasticsearch Indexing", f: elasticIndexing, height: 60, width: 200) ),
+                  ListTile(title: GlassTextButton(text: "Export Provinces", f: exportProvinces, height: 60) ),
+                  ListTile(title: GlassTextButton(text: "Export Countries", f: exportCountries, height: 60) ),
+                  ListTile(title: GlassTextButton(text: "Export Resources", f: exportResources, height: 60) ),
+                  ListTile(title: GlassTextButton(text: "ES Indexing", f: elasticIndexing, height: 60, width: 200) ),
                   ListTile(title: ElevatedButton(
                     // switch to LoginPage
                     onPressed: () { Navigator.of(context).push(
@@ -97,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                       overlayColor: MaterialStateProperty.all(const Color.fromARGB(255, 190, 190, 156)),
                       elevation: MaterialStateProperty.all(10.0),
                       side: MaterialStateProperty.all(const BorderSide(color: Colors.pinkAccent)),
-                      hintText: 'Search Province...',
+                      hintText: 'Search province or country...',
                       hintStyle: MaterialStateProperty.all(const TextStyle(color: Colors.black54, fontWeight: FontWeight.bold)),
                       onChanged: (String value) { getResult(value); },
                       onSubmitted: (String value) { getResult(value); },  // when enter button is clicked
@@ -181,9 +183,39 @@ class _HomePageState extends State<HomePage> {
 
   }
 
-  void export() async {
-    log("Export button clicked");
+  void exportProvinces() async {
+    log("Export Provinces button clicked");
     const String url = 'http://localhost:8080/api/v1/province/export';
+
+    try {
+      final response = await dio.get(url);
+      if( response.statusCode == 200 ) {
+        log("Exporting succeeded");
+      }
+
+    } catch(e) {
+      log(e.toString());
+    }
+  }
+
+  void exportCountries() async {
+    log("Export Countries button clicked");
+    const String url = 'http://localhost:8080/api/v1/country/export';
+
+    try {
+      final response = await dio.get(url);
+      if( response.statusCode == 200 ) {
+        log("Exporting succeeded");
+      }
+
+    } catch(e) {
+      log(e.toString());
+    }
+  }
+
+  void exportResources() async {
+    log("Export Resources button clicked");
+    const String url = 'http://localhost:8080/api/v1/resource/export';
 
     try {
       final response = await dio.get(url);

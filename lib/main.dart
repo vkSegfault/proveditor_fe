@@ -40,9 +40,14 @@ class _HomePageState extends State<HomePage> {
 
   String responseJson = "";
   Map<String, dynamic>  responseJsonMap = {};
+
   ProvinceView provinceView = const ProvinceView( name: "DEBUG", country: "DEBUG", pop: -1 );
   List<ProvinceView> provinceViewList = List.empty(growable: true);
   late ProvinceList provinceList = ProvinceList( provinceList: provinceViewList );
+
+  ProvinceView2 provinceView2 = const ProvinceView2( name: "DEBUG", country: "DEBUG", pop: -1 );
+  List<ProvinceView2> provinceViewList2 = List.empty(growable: true);
+  late ProvinceList2 provinceList2 = ProvinceList2( provinceList: provinceViewList2 );
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +104,7 @@ class _HomePageState extends State<HomePage> {
                       overlayColor: MaterialStateProperty.all(const Color.fromARGB(255, 190, 190, 156)),
                       elevation: MaterialStateProperty.all(10.0),
                       side: MaterialStateProperty.all(const BorderSide(color: Colors.pinkAccent)),
-                      hintText: 'Search province or country...',
+                      hintText: 'Search province by name or it\'s country...',
                       hintStyle: MaterialStateProperty.all(const TextStyle(color: Colors.black54, fontWeight: FontWeight.bold)),
                       onChanged: (String value) { getResult(value); },
                       onSubmitted: (String value) { getResult(value); },  // when enter button is clicked
@@ -108,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                       decoration: BoxDecoration(color: const Color.fromARGB(100, 136, 171, 201), borderRadius: BorderRadius.circular(10)),
                       margin: const EdgeInsets.symmetric( horizontal: 15, vertical: 15 ),
                       alignment: Alignment.center,
-                      child: provinceList
+                      child: provinceList2
                     ),
                   ],
                 ),
@@ -137,7 +142,7 @@ class _HomePageState extends State<HomePage> {
       if ( response.statusCode == 200 ) {
         log( "### THERE ARE: ${response.data['hits']['total']['value']} PROVINCES mathichg query: $query");
         
-        provinceViewList.clear();
+        provinceViewList2.clear();
         for ( final prov in response.data['hits']['hits'] ) {
 
           String provinceName = prov['_source']['name'];
@@ -155,10 +160,10 @@ class _HomePageState extends State<HomePage> {
 
           log( provinceName );
           setState(() {
-            provinceViewList.add(ProvinceView( name: provinceName, country: country, pop: pop));
+            provinceViewList2.add(ProvinceView2( name: provinceName, country: country, pop: pop));
           });
         }
-        provinceList = ProvinceList(provinceList: provinceViewList);
+        provinceList2 = ProvinceList2(provinceList: provinceViewList2);
       }
 
     } catch(e) {

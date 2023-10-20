@@ -38,23 +38,11 @@ class _HomePageState extends State<HomePage> {
 
   String responseJson = "";
   Map<String, dynamic>  responseJsonMap = {};
-
-  // ProvinceView provinceView = const ProvinceView( name: "DEBUG", country: "DEBUG", pop: -1 );
-  // List<ProvinceView> provinceViewList = List.empty(growable: true);
-  // late ProvinceList provinceList = ProvinceList( provinceList: provinceViewList );
-
-  // ProvinceView2 provinceView2 = ProvinceView2( name: "DEBUG", country: "DEBUG", pop: -1 );
   List<ProvinceView2> provinceViewList2 = List.empty(growable: true);
   late ProvinceList2 provinceList2 = ProvinceList2( provinceList: provinceViewList2 );
 
   @override
   Widget build(BuildContext context) {
-    log("====> BUILD SET STATE CALLED");
-    for( final p in provinceViewList2 ) {
-      log( "==> ${p.name}" );
-    }
-    
-
     return Scaffold(
       backgroundColor: Colors.black12,
       appBar: AppBar( title: const Text("Province Editor"), centerTitle: true, backgroundColor: const Color.fromARGB(255, 165, 149, 99), ),
@@ -157,7 +145,6 @@ class _HomePageState extends State<HomePage> {
             // if DB if dropped, new one won't probbaly has [country] or [pop] or if Province is sea
             country = prov['_source']['country']['name'];
             pop = prov['_source']['pop'];
-            log( "$provinceName of country $country with pop: $pop" );
           } catch(e) {
             log( "No [COUNTRY] or [POP] to access" );
             country = "## NOT PROVIDED ##";
@@ -170,9 +157,7 @@ class _HomePageState extends State<HomePage> {
             provinceViewList2.add( ProvinceView2( name: provinceName, country: country, pop: pop) );
           });
         }
-        for ( final p in provinceViewList2 ) {
-          log( "Content of provinceViewList2: " + p.name );
-        }
+
         setState(() {
           // provinceList2.clearList();
           // provinceList2.addList( provinceViewList2 );
@@ -181,13 +166,8 @@ class _HomePageState extends State<HomePage> {
       }
 
     } catch(e) {
-      log( "SHOULDN'T THROW HERE" );
       log(e.toString());
     }
-
-    setState(() {
-      
-    });
 
   }
 

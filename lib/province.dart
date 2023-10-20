@@ -64,11 +64,11 @@ import 'package:flutter/material.dart';
 // }
 
 class ProvinceView2 extends StatefulWidget {
-  ProvinceView2({super.key, this.name = "ERROR", this.country = "ERROR", this.pop = -1});
+  const ProvinceView2({super.key, this.name = "ERROR", this.country = "ERROR", this.pop = -1});
 
   final String name;
-  String country;
-  int pop;
+  final String country;
+  final int pop;
 
   @override
   State<ProvinceView2> createState() => _ProvinceView2State();
@@ -77,15 +77,17 @@ class ProvinceView2 extends StatefulWidget {
 class _ProvinceView2State extends State<ProvinceView2> {
 
   final Dio dio = Dio();
-  
   Widget row = const Row();
-  bool rowEditable = false;
+  String _country = "";
+  int _pop = -1;
 
   //// to properly display list of Provinces we need to init Row inside `initState()` and `didUpdateWidget()`
   // initState() is called per Widget entering state, not per every new instance of Widget
   @override
   void initState() {
     super.initState();
+    _country = widget.country;
+    _pop = widget.pop;
 
     initializeDefaultRow();
   }
@@ -94,6 +96,8 @@ class _ProvinceView2State extends State<ProvinceView2> {
   @override
   void didUpdateWidget( ProvinceView2 oldView ) {
     super.didUpdateWidget(oldView);
+    _country = widget.country;
+    _pop = widget.pop;
 
     initializeDefaultRow();
   }
@@ -125,8 +129,8 @@ class _ProvinceView2State extends State<ProvinceView2> {
               children: [
                 const SizedBox(height: 10),
                 Text( widget.name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold), ),
-                Text( "Country: " + widget.country ),
-                Text( "Pop: " + widget.pop.toString() ),
+                Text( "Country: " + _country ),
+                Text( "Pop: " + _pop.toString() ),
                 const SizedBox(height: 10),
               ],
             ),
@@ -150,12 +154,12 @@ class _ProvinceView2State extends State<ProvinceView2> {
               const SizedBox(height: 10),
               Text( widget.name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold), ),
               SizedBox( width: 200, height: 50, child: 
-                TextField( onChanged: (capturedValue) {  widget.country = capturedValue; },
-                  controller: TextEditingController(text: widget.country), decoration: InputDecoration( border: OutlineInputBorder( borderRadius: BorderRadius.circular(10) ), hintText: widget.country ) , style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold), )
+                TextField( onChanged: (capturedValue) {  _country = capturedValue; },
+                  controller: TextEditingController(text: _country), decoration: InputDecoration( border: OutlineInputBorder( borderRadius: BorderRadius.circular(10) ), hintText: _country ) , style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold), )
               ),
               SizedBox( width: 200, height: 50, child: 
-                TextField( onChanged: (capturedValue) { widget.pop = int.parse(capturedValue); },
-                  controller: TextEditingController(text: widget.pop.toString() ), decoration: InputDecoration( border: OutlineInputBorder( borderRadius: BorderRadius.circular(10) ), hintText: widget.pop.toString() ) , style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold), )
+                TextField( onChanged: (capturedValue) { _pop = int.parse(capturedValue); },
+                  controller: TextEditingController(text: _pop.toString() ), decoration: InputDecoration( border: OutlineInputBorder( borderRadius: BorderRadius.circular(10) ), hintText: _pop.toString() ) , style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold), )
               ),
               const SizedBox(height: 10),
             ],
@@ -173,7 +177,7 @@ class _ProvinceView2State extends State<ProvinceView2> {
     // 1. call PUT endpoint to update province
     // e.g.: curl -X 'PUT' 'http://localhost:8080/api/v1/province/Berlin/update?countryName=Germany&pop=234' -H 'accept: */*'
 
-    String url = 'http://localhost:8080/api/v1/province/${widget.name}/update?countryName=${widget.country}&pop=${widget.pop}';
+    String url = 'http://localhost:8080/api/v1/province/${widget.name}/update?countryName=${_country}&pop=${_pop}';
     print( url );
 
     try {
